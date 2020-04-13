@@ -1,0 +1,27 @@
+{
+  "name": "gen-service",
+  "version": "1.0.0",
+  "description": "一个根据swagger文档生成service层的工具",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["swagger", "document", "service"],
+  "files": [],
+  "homepage": "",
+  "bugs": {},
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "author": {
+    "name": "limoer96",
+    "email": "myt19960503@outlook.com",
+    "url": "https://limoer.cc"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "app-root-path": "^3.0.0",
+    "mkdirp": "^1.0.4"
+  }
+}
