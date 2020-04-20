@@ -1,14 +1,14 @@
-const path = require("path");
 const fs = require("fs").promises;
 const http = require("http");
-const traverse = require("./traverse");
-const appRoot = require("app-root-path").toString();
-const Template = require("./template");
+const traverse = require("./src/traverse");
+const Template = require("./src/template");
+const utils = require("./src/util");
 
 function readDoc(fileName) {
   fs.readFile(fileName, "utf-8")
     .then((file) => {
       const doc = JSON.parse(file);
+      console.log("run this");
       traverse(doc);
     })
     .catch((error) => {
@@ -45,21 +45,21 @@ function getDocOrigin(url) {
 }
 
 function run() {
-  fs.readFile(path.join(appRoot, "./.service-config.json"), "utf-8").then(
-    (file) => {
-      const config = JSON.parse(file);
-      global.SERVICE_CONFIG = config; // 存储到全局
-      if (config.originUrl) {
-        getDocOrigin(config.originUrl);
-      } else {
-        readDoc(path.resolve(appRoot, config.sourcePath));
-      }
+  fs.readFile(
+    utils.findFilePath(process.cwd(), utils.CONFIG_FILE),
+    "utf-8"
+  ).then((file) => {
+    const config = JSON.parse(file);
+    console.log("config", config);
+    global.SERVICE_CONFIG = config; // 存储到全局
+    if (config.originUrl) {
+      getDocOrigin(config.originUrl);
+    } else {
+      readDoc(utils.findFilePath(process.cwd(), config.sourcePath));
     }
-  );
+  });
 }
 
 exports.Template = Template;
 
-run()
-
-// module.exports = run;
+exports.run = run;

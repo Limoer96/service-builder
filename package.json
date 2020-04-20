@@ -6,7 +6,11 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": ["swagger", "document", "service"],
+  "keywords": [
+    "swagger",
+    "document",
+    "service"
+  ],
   "files": [],
   "homepage": "",
   "bugs": {},
@@ -21,7 +25,6 @@
   },
   "license": "ISC",
   "dependencies": {
-    "app-root-path": "^3.0.0",
     "mkdirp": "^1.0.4"
   }
 }
