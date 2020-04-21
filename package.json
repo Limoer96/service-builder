@@ -1,7 +1,7 @@
 {
-  "name": "gen-service",
+  "name": "sv-builder",
   "version": "1.0.0",
-  "description": "一个根据swagger文档生成service层的工具",
+  "description": "一个根据swagger文档生成service的工具",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -11,12 +11,15 @@
     "document",
     "service"
   ],
-  "files": [],
-  "homepage": "",
+  "files": [
+    "src/*.js",
+    "index.js"
+  ],
+  "homepage": "https://github.com/Limoer96/service-builder",
   "bugs": {},
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/Limoer96/service-builder"
   },
   "author": {
     "name": "limoer96",

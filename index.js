@@ -8,11 +8,10 @@ function readDoc(fileName) {
   fs.readFile(fileName, "utf-8")
     .then((file) => {
       const doc = JSON.parse(file);
-      console.log("run this");
       traverse(doc);
     })
     .catch((error) => {
-      console.log("读取文件出错：", error.message);
+      console.error("读取文件出错：", error.message);
     });
 }
 
@@ -21,7 +20,7 @@ function getDocOrigin(url) {
     .get(url, (res) => {
       const { statusCode } = res;
       if (res.statusCode !== 200) {
-        console.log(new Error(`请求失败，请重试，code：${statusCode}`));
+        console.error(`请求失败，请重试，code：${statusCode}`);
         res.resume();
         return;
       }
@@ -50,7 +49,6 @@ function run() {
     "utf-8"
   ).then((file) => {
     const config = JSON.parse(file);
-    console.log("config", config);
     global.SERVICE_CONFIG = config; // 存储到全局
     if (config.originUrl) {
       getDocOrigin(config.originUrl);
