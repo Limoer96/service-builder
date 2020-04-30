@@ -8,12 +8,10 @@ function traverse(doc) {
   }
   if (doc.paths) {
     const keys = Object.keys(doc.paths);
-    console.log(process.cwd(), SERVICE_CONFIG.templateClass);
     const templatePath = findFilePath(
       process.cwd(),
       SERVICE_CONFIG.templateClass
     );
-    console.log("templatePath", templatePath);
     const Renderer = require(templatePath);
     if (Object.getPrototypeOf(Renderer) !== Template) {
       console.error("渲染模板必须继承预定模板<Template>");

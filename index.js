@@ -58,6 +58,8 @@ function run() {
   });
 }
 
+run();
+
 exports.Template = Template;
 
 exports.run = run;

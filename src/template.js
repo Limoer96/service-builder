@@ -1,13 +1,13 @@
 const path = require("path");
 const util = require("./util");
 const mkdirp = require("mkdirp");
+const prettier = require("prettier");
 
 class Template {
   constructor(docs) {
     this.docs = docs;
     const config = global.SERVICE_CONFIG || {};
     this.rootDir = path.join(process.cwd(), config.outDir);
-    console.log(this.rootDir);
     this.ext = config.ext; // 扩展名
   }
   renderContent() {
@@ -20,6 +20,12 @@ class Template {
         : `${fileName}${this.ext}`;
       const filePath = path.join(relativePath, fName);
       let content = this.getTemplateContent(doc);
+      content = prettier.format(content, {
+        semi: false,
+        singleQuote: true,
+        printWidth: 130,
+        parser: "babel",
+      });
       mkdirp(relativePath).then(() => {
         util.writeFile(filePath, content);
       });

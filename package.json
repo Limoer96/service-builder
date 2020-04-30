@@ -28,6 +28,7 @@
   },
   "license": "ISC",
   "dependencies": {
-    "mkdirp": "^1.0.4"
+    "mkdirp": "^1.0.4",
+    "prettier": "^2.0.5"
   }
 }
