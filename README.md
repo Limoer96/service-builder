@@ -17,11 +17,11 @@
   "sourcePath": "./service.json", // 本地swagger文档
   "outDir": "./service", // service 输入目录
   "templateClass": "TemplateClass.js", // 模板文件名
-  "ext": ".js" // 输出文件扩展名
+  "ext": ".ts" // 输出文件扩展名
 }
 ```
 
-3. 在根目录新建模板文件`config.templateClass`指定的同名文件，最基本的写法如下：
+3. 在根目录新建模板文件`config.templateClass`指定的同名文件，一个简易的写法可以是：
 
 ```js
 const Template = require("sv-builder").Template;
@@ -29,13 +29,21 @@ const Template = require("sv-builder").Template;
 class MyTemplate extends Template {
   // 必须要实现的方法
   getTemplateContent(doc) {
-    return `import request from '@/utils/request'
-/**
- * ${doc.summary}
- */
-export function ${doc.fileName}(data, params) {
-  return request('${doc.url}', '${doc.method}', data, params)
-}`;
+    const [queryParams, bodyParams] = this.getTypeParams();
+    return `
+      import request from '@/utils/request'
+
+      type BodyParams = ${bodyParams}
+      interface QueryParams {
+        ${this.getTypeQueryParams(queryParams)}
+      }
+      /**
+       * ${doc.summary}
+       */
+      export function ${doc.fileName}(query: QueryParams, body: BodyParams) {
+        return request('${doc.url}', '${doc.method}', query, body)
+      }
+    `;
   }
 }
 
@@ -50,7 +58,7 @@ const service = require("sv-builder");
 service.run();
 ```
 
-5. 在`node(版本>=10.0.0)`环境下执行入口文件，`service`将会生成到指定目录。
+5. 在`node(版本>=10.0.0)`环境下执行入口文件，`service`(如果是 ts 的话还将生成相关的类型定义文件`api.d.ts`)将会生成到指定目录。
 
 ### Tips
 
@@ -69,3 +77,9 @@ interface IDoc {
   doc: any; // 某一请求的原始swagger文档
 }
 ```
+
+### 更新记录
+
+#### 1.1.0
+
+- 增加对`ts`的支持，现在可以生成相关的`.d.ts`文件，`Template`类提供了`getTypeParams`和`getTypeQueryParams`的方法用于生成参数定义

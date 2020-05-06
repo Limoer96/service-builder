@@ -63,6 +63,29 @@ function findFilePath(dir, fileName) {
   }
 }
 
+function isTypeScript() {
+  const ext = global.SERVICE_CONFIG ? global.SERVICE_CONFIG.ext : "";
+  if (!ext) {
+    return false;
+  }
+  return ext === ".ts";
+}
+
+// exports.getTypeQueryParams = function getTypeQueryParams(paramsList = []) {
+//   if (!paramsList || paramsList.length === 0) {
+//     return "";
+//   }
+//   return paramsList
+//     .map((param) => {
+//       const { description, name, required, type } = param;
+//       reutrn`
+//       /** ${description} */
+//       ${name}${required ? "" : "?"}: ${type}\n
+//     `;
+//     })
+//     .join("");
+// };
+
 exports.findFilePath = findFilePath;
 
 exports.CONFIG_FILE = ".service-config.json";
@@ -70,3 +93,5 @@ exports.CONFIG_FILE = ".service-config.json";
 exports.trimArray = trimArray;
 
 exports.writeFile = writeFile;
+
+exports.isTypeScript = isTypeScript;

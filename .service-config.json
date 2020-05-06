@@ -1,7 +1,7 @@
 {
-  "originUrl": "http://apidoc.t.iwubida.com/gen/v2/api-docs?serviceName=retail-assemble-merch",
+  "originUrl": "",
   "sourcePath": "./service.json",
   "outDir": "./service",
   "templateClass": "TemplateClass.js",
-  "ext": ".js"
+  "ext": ".ts"
 }

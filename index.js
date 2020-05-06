@@ -1,17 +1,22 @@
 const fs = require("fs").promises;
 const http = require("http");
 const traverse = require("./src/traverse");
+const genDefinitions = require("./src/definitions");
 const Template = require("./src/template");
 const utils = require("./src/util");
+const path = require("path");
 
 function readDoc(fileName) {
   fs.readFile(fileName, "utf-8")
     .then((file) => {
       const doc = JSON.parse(file);
+      if (utils.isTypeScript()) {
+        genDefinitions(doc);
+      }
       traverse(doc);
     })
     .catch((error) => {
-      console.error("读取文件出错：", error.message);
+      console.error("出现错误：", error);
     });
 }
 
@@ -32,14 +37,17 @@ function getDocOrigin(url) {
       res.on("end", () => {
         try {
           const doc = JSON.parse(rawData);
+          if (utils.isTypeScript()) {
+            genDefinitions(doc);
+          }
           traverse(doc);
         } catch (e) {
-          console.error(`解析文件出错：${e.message}`);
+          console.error(`出现了错误：${e.message}`);
         }
       });
     })
-    .on("error", (e) => {
-      console.log(`出现了错误：${e.message}`);
+    .on("error", (err) => {
+      console.error(`出现了错误：${err}`);
     });
 }
 
@@ -53,12 +61,10 @@ function run() {
     if (config.originUrl) {
       getDocOrigin(config.originUrl);
     } else {
-      readDoc(utils.findFilePath(process.cwd(), config.sourcePath));
+      readDoc(path.resolve(process.cwd(), config.sourcePath));
     }
   });
 }
-
-run();
 
 exports.Template = Template;
 
