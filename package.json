@@ -1,6 +1,6 @@
 {
   "name": "sv-builder",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "一个根据swagger文档生成service的工具",
   "main": "index.js",
   "scripts": {
