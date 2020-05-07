@@ -2,7 +2,6 @@ const fs = require("fs").promises;
 const http = require("http");
 const traverse = require("./src/traverse");
 const genDefinitions = require("./src/definitions");
-const Template = require("./src/template");
 const utils = require("./src/util");
 const path = require("path");
 
@@ -65,7 +64,5 @@ function run() {
     }
   });
 }
-
-exports.Template = Template;
 
 exports.run = run;

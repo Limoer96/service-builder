@@ -1,4 +1,4 @@
-// const Template = require("sv-builder").Template;
+// const Template = require("sv-builder-template");
 
 // class TemplateClass extends Template {
 //   // 必须要实现的方法

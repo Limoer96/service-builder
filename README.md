@@ -10,7 +10,7 @@
 
 #### 基本方式
 
-1. `npm install sv-builder --save-dev`
+1. `npm install sv-builder sv-builder-template --save-dev`
 2. 在项目根目录新建`.service-config.json`文件，进行配置，一个简单的例子如下：
 
 ```json
@@ -67,9 +67,10 @@ service.run();
 <span id="usage-cli"></span>
 
 1. `npm install -g sv-builder` 安装到全局
-2. 运行`sv-builder -i`或者`sv-builder init` 初始化，将生成`.service-config.json`和`Template.js`两个文件
-3. 按需修改`.service-config.json`和`Template.js`
-4. 运行`sv-builder -g`或`sv-builder generate`生成`service`
+2. `npm install sv-builder-template --save-dev` 安装模板文件
+3. 运行`sv-builder -i`或者`sv-builder init` 初始化，将生成`.service-config.json`和`Template.js`两个文件
+4. 按需修改`.service-config.json`和`Template.js`
+5. 运行`sv-builder -g`或`sv-builder generate`生成`service`
 
 ### Tips
 

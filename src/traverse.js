@@ -1,7 +1,6 @@
 const parser = require("./parser");
 const path = require("path");
 const findFilePath = require("./util").findFilePath;
-const Template = require("./template");
 function traverse(doc) {
   if (!doc) {
     return;
@@ -13,14 +12,14 @@ function traverse(doc) {
       SERVICE_CONFIG.templateClass
     );
     const Renderer = require(templatePath);
-    if (Object.getPrototypeOf(Renderer) !== Template) {
-      console.error("渲染模板必须继承预定模板<Template>");
-      return;
-    }
     for (let key of keys) {
       const obj = doc.paths[key];
       const result = parser(doc.basePath, key, obj);
-      new Renderer(result).renderContent();
+      try {
+        new Renderer(result).renderContent();
+      } catch (error) {
+        console.error("请检查渲染模板：", error);
+      }
     }
   }
 }
