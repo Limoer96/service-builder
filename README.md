@@ -8,6 +8,8 @@
 
 ### 使用
 
+#### 基本方式
+
 1. `npm install sv-builder --save-dev`
 2. 在项目根目录新建`.service-config.json`文件，进行配置，一个简单的例子如下：
 
@@ -60,6 +62,15 @@ service.run();
 
 5. 在`node(版本>=10.0.0)`环境下执行入口文件，`service`(如果是 ts 的话还将生成相关的类型定义文件`api.d.ts`)将会生成到指定目录。
 
+#### CLI（>=1.2.0 版本）
+
+<span id="usage-cli"></span>
+
+1. `npm install -g sv-builder` 安装到全局
+2. 运行`sv-builder -i`或者`sv-builder init` 初始化，将生成`.service-config.json`和`Template.js`两个文件
+3. 按需修改`.service-config.json`和`Template.js`
+4. 运行`sv-builder -g`或`sv-builder generate`生成`service`
+
 ### Tips
 
 - 在`originUrl`和`sourcePath`同时配置的情况下，优先使用远程`swagger`文档。
@@ -83,3 +94,7 @@ interface IDoc {
 #### 1.1.0
 
 - 增加对`ts`的支持，现在可以生成相关的`.d.ts`文件，`Template`类提供了`getTypeParams`和`getTypeQueryParams`的方法用于生成参数定义
+
+#### 1.2.0
+
+- 新增`CLI`，用法见[使用/CLI](#usage-cli)
