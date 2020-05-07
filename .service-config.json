@@ -1,7 +1,0 @@
-{
-  "originUrl": "",
-  "sourcePath": "./service.json",
-  "outDir": "./service",
-  "templateClass": "TemplateClass.js",
-  "ext": ".ts"
-}

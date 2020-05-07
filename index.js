@@ -42,7 +42,7 @@ function getDocOrigin(url) {
           }
           traverse(doc);
         } catch (e) {
-          console.error(`出现了错误：${e.message}`);
+          console.error(`出现了错误：${e}`);
         }
       });
     })
