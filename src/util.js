@@ -46,6 +46,8 @@ function trimArray(arr) {
 
 function findFilePath(dir, fileName) {
   const files = fs.readdirSync(dir);
+  // 这里递归遍历有问题，应该遍历时先检测文件后检测文件夹
+  const dirs = [];
   for (const file of files) {
     const cName = path.join(dir, file);
     const stats = fs.lstatSync(cName);
@@ -53,12 +55,19 @@ function findFilePath(dir, fileName) {
       if (file === ".git" || file === "node_modules") {
         continue;
       }
-      const result = findFilePath(cName, fileName);
-      if (result) {
-        return result;
-      }
+      dirs.push(cName);
+      // const result = findFilePath(cName, fileName);
+      // if (result) {
+      //   return result;
+      // }
     } else if (stats.isFile() && file === fileName) {
       return cName;
+    }
+  }
+  for (const dir of dirs) {
+    const result = findFilePath(dir, fileName);
+    if (result) {
+      return result;
     }
   }
 }
