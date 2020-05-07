@@ -26,7 +26,7 @@
 3. 在根目录新建模板文件`config.templateClass`指定的同名文件，一个简易的写法可以是：
 
 ```js
-const Template = require("sv-builder").Template;
+const Template = require("sv-builder-template");
 
 class MyTemplate extends Template {
   // 必须要实现的方法
