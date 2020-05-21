@@ -1,8 +1,15 @@
-const fs = require("fs");
-const path = require("path");
+const fs = require('fs')
+const path = require('path')
 
 function isEmpty(value) {
-  return value == undefined || value === "";
+  return value == undefined || value === ''
+}
+
+function isFileExist(path) {
+  if (!path) {
+    return false
+  }
+  return fs.existsSync(path)
 }
 
 /**
@@ -11,62 +18,62 @@ function isEmpty(value) {
  */
 function trimArray(arr) {
   if (!arr || arr.length === 0) {
-    return arr;
+    return arr
   }
-  const len = arr.length;
+  const len = arr.length
   if (!isEmpty(arr[0]) && !isEmpty(arr[len - 1])) {
-    return arr;
+    return arr
   }
-  let start = 0;
-  let end = len - 1;
+  let start = 0
+  let end = len - 1
   for (; start < end; ) {
     if (isEmpty(arr[start])) {
-      start += 1;
+      start += 1
     } else if (isEmpty(arr[end])) {
-      end -= 1;
+      end -= 1
     } else {
-      break;
+      break
     }
   }
-  return arr.slice(start, end + 1);
+  return arr.slice(start, end + 1)
 }
 
 function findFilePath(dir, fileName) {
-  const files = fs.readdirSync(dir);
+  const files = fs.readdirSync(dir)
   // 这里递归遍历有问题，应该遍历时先检测文件后检测文件夹
-  const dirs = [];
+  const dirs = []
   for (const file of files) {
-    const cName = path.join(dir, file);
-    const stats = fs.lstatSync(cName);
+    const cName = path.join(dir, file)
+    const stats = fs.lstatSync(cName)
     if (stats.isDirectory()) {
-      if (file === ".git" || file === "node_modules") {
-        continue;
+      if (file === '.git' || file === 'node_modules') {
+        continue
       }
-      dirs.push(cName);
+      dirs.push(cName)
     } else if (stats.isFile() && file === fileName) {
-      return cName;
+      return cName
     }
   }
   for (const dir of dirs) {
-    const result = findFilePath(dir, fileName);
+    const result = findFilePath(dir, fileName)
     if (result) {
-      return result;
+      return result
     }
   }
 }
 
 function isTypeScript() {
-  const ext = global.SERVICE_CONFIG ? global.SERVICE_CONFIG.ext : "";
+  const ext = global.SERVICE_CONFIG ? global.SERVICE_CONFIG.ext : ''
   if (!ext) {
-    return false;
+    return fs.existsSync(path.resolve(process.cwd(), 'tsconfig.json'))
   }
-  return ext === ".ts";
+  return ext === '.ts'
 }
 
-exports.findFilePath = findFilePath;
+exports.findFilePath = findFilePath
 
-exports.CONFIG_FILE = ".service-config.json";
+exports.trimArray = trimArray
 
-exports.trimArray = trimArray;
+exports.isTypeScript = isTypeScript
 
-exports.isTypeScript = isTypeScript;
+exports.isFileExist = isFileExist

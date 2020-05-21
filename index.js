@@ -1,68 +1,61 @@
-const fs = require("fs").promises;
-const http = require("http");
-const traverse = require("./src/traverse");
-const genDefinitions = require("./src/definitions");
-const utils = require("./src/util");
-const path = require("path");
+const fs = require('fs').promises
+const fse = require('fs-extra')
+const traverse = require('./src/traverse')
+const genDefinitions = require('./src/definitions')
+const { isFileExist, isTypeScript, findFilePath } = require('./src/util')
+const path = require('path')
+const chalk = require('chalk')
+const { readDoc, readDocOrigin } = require('./src/utils/readSwaggerDoc')
+const checkTemplateExist = require('./src/utils/checkTemplate')
 
-function readDoc(fileName) {
-  fs.readFile(fileName, "utf-8")
-    .then((file) => {
-      const doc = JSON.parse(file);
-      if (utils.isTypeScript()) {
-        genDefinitions(doc);
-      }
-      traverse(doc);
-    })
-    .catch((error) => {
-      console.error("出现错误：", error);
-    });
+const CONFIG_FILE_NAME = '.service-config.json'
+
+function resolvePath(filename) {
+  return path.resolve(process.cwd(), filename)
 }
 
-function getDocOrigin(url) {
-  http
-    .get(url, (res) => {
-      const { statusCode } = res;
-      if (res.statusCode !== 200) {
-        console.error(`请求失败，请重试，code：${statusCode}`);
-        res.resume();
-        return;
-      }
-      res.setEncoding("utf8");
-      let rawData = "";
-      res.on("data", (chunk) => {
-        rawData += chunk;
-      });
-      res.on("end", () => {
-        try {
-          const doc = JSON.parse(rawData);
-          if (utils.isTypeScript()) {
-            genDefinitions(doc);
-          }
-          traverse(doc);
-        } catch (e) {
-          console.error(`出现了错误：${e}`);
-        }
-      });
-    })
-    .on("error", (err) => {
-      console.error(`出现了错误：${err}`);
-    });
-}
+process.on('unhandledRejection', (err) => {
+  throw err
+})
 
 function run() {
-  fs.readFile(
-    utils.findFilePath(process.cwd(), utils.CONFIG_FILE),
-    "utf-8"
-  ).then((file) => {
-    const config = JSON.parse(file);
-    global.SERVICE_CONFIG = config; // 存储到全局
-    if (config.originUrl) {
-      getDocOrigin(config.originUrl);
-    } else {
-      readDoc(path.resolve(process.cwd(), config.sourcePath));
-    }
-  });
+  if (!isFileExist(resolvePath(CONFIG_FILE_NAME))) {
+    console.log(
+      `config file ${chalk.red(
+        CONFIG_FILE_NAME
+      )} not exist, add this file first`
+    )
+    process.exit(1)
+  }
+  console.log('starting to generate...')
+  fs.readFile(findFilePath(process.cwd(), CONFIG_FILE_NAME), 'utf-8')
+    .then((file) => {
+      const config = JSON.parse(file)
+      global.SERVICE_CONFIG = config
+      // remove all content in outDir
+      fse.emptyDirSync(resolvePath(config.outDir))
+      // check template exists.
+      const templatePath = resolvePath(config.templateClass)
+      return checkTemplateExist(templatePath)
+    })
+    .then(() => {
+      const { originUrl, sourcePath } = global.SERVICE_CONFIG
+      if (originUrl) {
+        return readDocOrigin(originUrl)
+      } else {
+        return readDoc(resolvePath(sourcePath))
+      }
+    })
+    .then((doc) => {
+      if (isTypeScript()) {
+        genDefinitions(doc)
+      }
+      traverse(doc)
+    })
+    .catch((err) => {
+      console.log(`error happend: ${chalk.red(err)}`)
+      process.exit(1)
+    })
 }
 
-exports.run = run;
+exports.run = run
