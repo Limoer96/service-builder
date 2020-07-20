@@ -1,27 +1,27 @@
-const parser = require("./parser");
-const path = require("path");
-const findFilePath = require("./util").findFilePath;
+const parser = require('./parser')
+const path = require('path')
+const findFilePath = require('./util').findFilePath
 function traverse(doc) {
   if (!doc) {
-    return;
+    return
   }
   if (doc.paths) {
-    const keys = Object.keys(doc.paths);
+    const keys = Object.keys(doc.paths)
     const templatePath = findFilePath(
       process.cwd(),
       SERVICE_CONFIG.templateClass
-    );
-    const Renderer = require(templatePath);
+    )
+    const Renderer = require(templatePath)
     for (let key of keys) {
-      const obj = doc.paths[key];
-      const result = parser(doc.basePath, key, obj);
+      const obj = doc.paths[key]
+      const result = parser(doc.basePath, key, obj)
       try {
-        new Renderer(result).renderContent();
+        new Renderer(result).renderContent()
       } catch (error) {
-        console.error("请检查渲染模板：", error);
+        console.error('请检查渲染模板：', error, result)
       }
     }
   }
 }
 
-module.exports = traverse;
+module.exports = traverse

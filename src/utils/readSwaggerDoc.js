@@ -1,7 +1,7 @@
 const fs = require('fs')
 const isUrl = require('is-url')
 const http = require('http')
-const { isFileExist, isTypeScript } = require('../util')
+const { isFileExist } = require('../util')
 
 /**
  * 从本地读取swagger文档
