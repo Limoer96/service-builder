@@ -53,7 +53,8 @@ function run() {
       traverse(doc)
     })
     .catch((err) => {
-      console.log(`error happend: ${chalk.red(err)}`)
+      console.log(err)
+      // console.log(`error happend: ${chalk.red(err)}`)
       process.exit(1)
     })
 }

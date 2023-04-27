@@ -1,6 +1,6 @@
 const path = require('path')
 const fs = require('fs')
-const renderer = require('./renderer')
+const { renderer, genericRenderer } = require('./renderer')
 const prettier = require('prettier')
 const mkdirp = require('mkdirp')
 
@@ -18,14 +18,20 @@ function renderDefinitions(content) {
 function getDefinitionsContent(doc) {
   if (doc && doc.definitions) {
     const definitions = doc.definitions
-    // key去重处理
     const keys = Object.keys(definitions)
     let content = ''
-    const typeDefinetions = []
+    const genericTypes = {}
     if (keys.length > 0) {
       content = keys
-        .map((key) => renderer(definitions[key], typeDefinetions))
+        .map((key) => renderer({...definitions[key], title: definitions[key].title || key}, genericTypes))
         .join('')
+    }
+    const genericKeys = Object.keys(genericTypes)
+    if (genericKeys.length > 0) {
+      content += genericKeys.map(k => {
+        const { generic, definition } = genericTypes[k]
+        return genericRenderer(k, generic, definition)
+      }).join('')
     }
     content = `
       declare namespace defs {
